@@ -37,7 +37,6 @@ app.get("/", (req, res) => {
 
 //
 app.post("/upload", upload.single("myfile"), (req, res) => {
-  console.log(req.file, "__upload_____");
   res.send(`File uploaded successfully: ${req?.file?.filename}`);
 });
 
