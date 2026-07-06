@@ -4,6 +4,7 @@ import path from "path";
 const app = express();
 
 //Application level middleware
+// method-1
 // if no next method is called, your browser or frondend will be in progress but never receives any resposne in frontend.
 
 app.use((req, res, next) => {
@@ -16,11 +17,12 @@ app.get("/", (req, res) => {
   res.send("Get method , Welcomes you....");
 });
 
-// route level middleware:
+//Application level middleware - for specific route.
+// method-2
 app.use("/users", (req, res, next) => {
   console.log(`Route level middleware`);
-//   res.send(`Route level middleware`);
-  next()
+  //   res.send(`Route level middleware`);
+  next();
 });
 
 app.get("/users/user1", (req, res) => {
