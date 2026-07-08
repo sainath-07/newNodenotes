@@ -279,7 +279,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#RDBMS-NON-RDBMS"
-                >RDBMS VS NON-RDBMS
+                >Mongodb vs Sql
               </a>
             </li>
             <li class="nav-item">
@@ -311,8 +311,23 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="#object-document-mapper"
+                >Object document mapper
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#mongoose-crud-operations"
                 >mongoose crud operations
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#mongodb-atlas"
+                >Mongodb Atlas
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#cors"
+                >CORS
               </a>
             </li>
           </ol>
@@ -24760,6 +24775,178 @@ new mongoose.Schema({},{
           </section>
           <hr>
 
+          <!-- ODM -->
+          <section  id="object-document-mapper" class="container my-5">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">What is ODM (Object Document Mapper)?</h2>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Definition -->
+            <h4 class="text-primary">Definition</h4>
+
+            <p>
+                <strong>ODM (Object Document Mapper)</strong> is a library that maps
+                <strong>JavaScript objects</strong> to <strong>MongoDB documents</strong>.
+            </p>
+
+            <p>
+                It acts as a bridge between your <strong>Node.js application</strong> and
+                <strong>MongoDB</strong>, making it easier to perform database operations.
+            </p>
+
+            <div class="alert alert-info">
+                <strong>Simple Definition:</strong><br>
+                Mongoose is an ODM that converts JavaScript objects into MongoDB documents
+                and MongoDB documents back into JavaScript objects.
+            </div>
+
+            <hr>
+
+            <!-- Example -->
+            <h4 class="text-success">Simple Example</h4>
+
+            <p>
+                Suppose you have the following JavaScript object:
+            </p>
+
+<pre class="bg-dark text-white p-3 rounded"><code>const user = {
+    name: "Sainath",
+    age: 25
+};</code></pre>
+
+            <p>
+                MongoDB stores data in the form of <strong>documents</strong>.
+            </p>
+
+<pre class="bg-dark text-white p-3 rounded"><code>{
+    "_id": "...",
+    "name": "Sainath",
+    "age": 25
+}</code></pre>
+
+            <div class="alert alert-success">
+                <strong>Mongoose (ODM)</strong> converts your JavaScript object into a
+                MongoDB document and converts MongoDB documents back into JavaScript objects.
+            </div>
+
+            <hr>
+
+            <!-- Flow -->
+            <h4 class="text-primary">How ODM Works</h4>
+
+<pre class="bg-light border p-3 rounded">
+JavaScript Object
+        ↓
+     Mongoose (ODM)
+        ↓
+MongoDB Document
+</pre>
+
+            <hr>
+
+            <!-- Mapper -->
+            <h4 class="text-success">Why is it called "Mapper"?</h4>
+
+            <p>
+                It is called a <strong>Mapper</strong> because it
+                <strong>maps one format to another</strong>.
+            </p>
+
+            <p>
+                It converts:
+            </p>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">
+                    JavaScript Object ➜ MongoDB Document
+                </li>
+
+                <li class="list-group-item">
+                    MongoDB Document ➜ JavaScript Object
+                </li>
+
+            </ul>
+
+            <hr>
+
+            <!-- Example -->
+            <h4 class="text-primary">Example</h4>
+
+<pre class="bg-dark text-white p-3 rounded"><code>const user = new User({
+    name: "Sainath",
+    age: 25
+});
+
+await user.save();</code></pre>
+
+            <p>
+                When you call:
+            </p>
+
+<pre class="bg-dark text-white p-3 rounded"><code>await user.save();</code></pre>
+
+            <p>
+                Mongoose automatically performs the following tasks:
+            </p>
+
+            <ul class="list-group">
+
+                <li class="list-group-item">
+                    ✅ Converts the JavaScript object into a MongoDB document.
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Validates the data based on the schema.
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Sends the document to MongoDB.
+                </li>
+
+                <li class="list-group-item">
+                    ✅ Retrieves MongoDB documents and converts them back into JavaScript objects when querying.
+                </li>
+
+            </ul>
+
+            <div class="alert alert-warning mt-4">
+                <strong>Conclusion:</strong><br>
+                Mongoose acts as a bridge between your application objects and MongoDB documents,
+                which is why it is called an <strong>Object Document Mapper (ODM)</strong>.
+            </div>
+
+            <hr>
+
+            <!-- Interview Answer -->
+            <h4 class="text-danger">Interview Answer (Short)</h4>
+
+            <div class="alert alert-primary">
+
+                <strong>Answer:</strong>
+
+                <p class="mb-0 mt-2">
+                    ODM stands for <strong>Object Document Mapper</strong>.
+                    Mongoose is an ODM library for MongoDB.
+                    It maps JavaScript objects to MongoDB documents and MongoDB documents
+                    back to JavaScript objects. It also provides features such as
+                    schemas, validation, middleware, and easy database operations.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+          </section>
+          <hr>
+
           <!-- mongoose crud -->
 
           <section id="mongoose-crud-operations" class="container py-5">
@@ -24816,6 +25003,70 @@ const connectDB = async () => {
 export default connectDB;</code></pre>
               </div>
             </div>
+
+            <div class="card shadow-sm border-0 my-4">
+
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">What does <code>1</code> mean in <code>process.exit(1)</code>?</h4>
+    </div>
+
+    <div class="card-body">
+
+        <p>
+            The number passed to <code>process.exit()</code> is called the
+            <strong>exit code</strong>.
+        </p>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Exit Code</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td><strong>0</strong></td>
+                        <td>Program completed successfully.</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Program exited because of an error.</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+        <hr>
+
+        <h5 class="text-success">Example: <code>process.exit(0)</code></h5>
+
+<pre class="bg-dark text-white p-3 rounded"><code>process.exit(0);</code></pre>
+
+        <div class="alert alert-success">
+            <strong>Meaning:</strong><br>
+            "Everything finished successfully."
+        </div>
+
+        <hr>
+
+        <h5 class="text-danger">Example: <code>process.exit(1)</code></h5>
+
+<pre class="bg-dark text-white p-3 rounded"><code>process.exit(1);</code></pre>
+
+        <div class="alert alert-danger">
+            <strong>Meaning:</strong><br>
+            "Something went wrong. Stop the application."
+        </div>
+
+    </div>
+
+</div>
 
             <div class="card my-2">
               <div class="card-header fw-bold bg-primary text-white">models/Student.js</div>
@@ -25005,6 +25256,555 @@ Response</code></pre>
             </div>
           </section>
           <hr />
+
+          <!-- mongodb atlas -->
+
+            <section  id="mongodb-atlas">
+        <h1 class="mb-4 text-primary">
+          MongoDB Atlas 
+        </h1>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>What is MongoDB Atlas?</h2>
+            <p>
+              <strong>MongoDB Atlas</strong> is a cloud database service
+              provided by MongoDB.
+            </p>
+            <p>
+              Instead of installing MongoDB on your own computer or server,
+              MongoDB Atlas hosts and manages your MongoDB database for you in
+              the cloud.
+            </p>
+            <div class="alert alert-info">
+              <b>Simple Definition:</b><br />
+              MongoDB Atlas = MongoDB running on the internet (managed by
+              MongoDB).
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Example</h2>
+            <h5>Without MongoDB Atlas</h5>
+            <pre>
+Your Laptop
+    ↓
+MongoDB Installed
+    ↓
+Database Stored on Your Computer</pre
+            >
+            <p>
+              If your laptop crashes or you reinstall the OS, your local
+              database may be lost unless backed up.
+            </p>
+
+            <h5>With MongoDB Atlas</h5>
+            <pre>
+Your Laptop
+    ↓
+Internet
+    ↓
+MongoDB Atlas Cloud
+    ↓
+Database Stored Securely Online</pre
+            >
+            <p>
+              Your data is stored securely in the cloud and can be accessed from
+              anywhere (subject to network access and security settings).
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Why do we use MongoDB Atlas?</h2>
+            <p>If MongoDB is installed only on your laptop:</p>
+            <pre>
+React
+  ↓
+Express
+  ↓
+MongoDB (Your Laptop)</pre
+            >
+            <p>Only your laptop can directly use that database.</p>
+            <p>
+              If your backend is deployed to the cloud, it cannot connect to the
+              MongoDB running only on your personal computer.
+            </p>
+
+            <p>Using MongoDB Atlas:</p>
+            <pre>
+React
+  ↓
+Express
+  ↓
+MongoDB Atlas (Cloud)</pre
+            >
+            <p>
+              Now both your deployed backend and your local development
+              environment can connect to the same cloud database (if allowed by
+              your Atlas configuration).
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Why not just install MongoDB locally?</h2>
+            <p>You absolutely can.</p>
+            <ul>
+              <li>MongoDB Community Edition</li>
+              <li>MongoDB Compass</li>
+            </ul>
+            <p>
+              Local MongoDB is excellent for learning and development, while
+              Atlas is commonly used for deployment and collaboration.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Do we still need MongoDB?</h2>
+            <p><strong>Yes.</strong></p>
+            <p>
+              MongoDB Atlas <strong>is MongoDB</strong>. Atlas does not replace
+              MongoDB—it hosts MongoDB as a managed cloud service.
+            </p>
+
+            <table class="table table-bordered">
+              <thead class="table-dark">
+                <tr>
+                  <th>Local Development</th>
+                  <th>Cloud</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MongoDB Community installed on your PC</td>
+                  <td>MongoDB Atlas</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>The database engine is still MongoDB.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Do we still need Mongoose?</h2>
+            <p><strong>Yes.</strong></p>
+            <p>
+              Mongoose is a Node.js ODM (Object Document Mapper). It helps
+              Express applications define schemas, validate data, and interact
+              with MongoDB more easily.
+            </p>
+
+            <pre><code>const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGODB_URI);</code></pre>
+
+            <p>Whether the connection string points to:</p>
+
+            <pre>mongodb://127.0.0.1:27017/myDatabase</pre>
+
+            <p>or</p>
+
+            <pre>
+mongodb+srv://username:password@cluster.mongodb.net/myDatabase</pre
+            >
+
+            <p>
+              your application code remains almost the same. Only the connection
+              string changes.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Relationship Between Them</h2>
+
+            <h5>Local Database</h5>
+            <pre>
+Express
+   ↓
+Mongoose
+   ↓
+MongoDB (Local Computer)</pre
+            >
+
+            <h5>MongoDB Atlas</h5>
+            <pre>
+Express
+   ↓
+Mongoose
+   ↓
+MongoDB Atlas (Cloud)</pre
+            >
+
+            <div class="alert alert-success">
+              Notice that <strong>Mongoose stays the same</strong>. Only the
+              database location changes.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>What does Atlas provide?</h2>
+            <ul>
+              <li>Database hosting</li>
+              <li>Automatic backups (plan dependent)</li>
+              <li>Monitoring</li>
+              <li>Easy scaling</li>
+              <li>Security features</li>
+              <li>User and network access management</li>
+              <li>Multi-cloud deployment options</li>
+            </ul>
+            <p>
+              If you self-host MongoDB, you are responsible for these tasks
+              yourself.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Local MongoDB vs MongoDB Atlas</h2>
+
+            <table class="table table-striped table-bordered">
+              <thead class="table-primary">
+                <tr>
+                  <th>Feature</th>
+                  <th>Local MongoDB</th>
+                  <th>MongoDB Atlas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Runs on your PC</td>
+                  <td>✅ Yes</td>
+                  <td>❌ No</td>
+                </tr>
+                <tr>
+                  <td>Runs in Cloud</td>
+                  <td>❌ No</td>
+                  <td>✅ Yes</td>
+                </tr>
+                <tr>
+                  <td>Internet Access</td>
+                  <td>❌ By default</td>
+                  <td>✅ Yes (configurable)</td>
+                </tr>
+                <tr>
+                  <td>Automatic Backups</td>
+                  <td>❌ Manual</td>
+                  <td>✅ Available</td>
+                </tr>
+                <tr>
+                  <td>Scaling</td>
+                  <td>Manual</td>
+                  <td>Easier</td>
+                </tr>
+                <tr>
+                  <td>Good for Learning</td>
+                  <td>✅ Yes</td>
+                  <td>✅ Yes</td>
+                </tr>
+                <tr>
+                  <td>Good for Production</td>
+                  <td>Possible, but self-managed</td>
+                  <td>✅ Common choice</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Real-Time Example</h2>
+
+            <h5>Without Atlas</h5>
+            <pre>
+Customer
+   ↓
+Website
+   ↓
+Your Laptop Database</pre
+            >
+
+            <p>
+              If your laptop is turned off, the website cannot access the
+              database.
+            </p>
+
+            <h5>With Atlas</h5>
+            <pre>
+Customer
+   ↓
+Website
+   ↓
+MongoDB Atlas</pre
+            >
+
+            <p>The database stays online independently of your laptop.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>Interview Answer</h2>
+
+            <div class="alert alert-warning">
+              MongoDB Atlas is the cloud-hosted version of MongoDB managed by
+              MongoDB. It lets us use MongoDB without installing or maintaining
+              the database server ourselves. We still use MongoDB because Atlas
+              runs MongoDB, and we still use Mongoose in our Node.js application
+              to define schemas, validate data, and interact with the MongoDB
+              database. The main difference is that the connection string points
+              to a cloud database instead of a local one.
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h2>One-Line Summary</h2>
+            <ul>
+              <li><strong>MongoDB</strong> → The database.</li>
+              <li>
+                <strong>MongoDB Atlas</strong> → A managed cloud service that
+                hosts MongoDB.
+              </li>
+              <li>
+                <strong>Mongoose</strong> → A Node.js ODM library used to
+                interact with MongoDB (whether local or Atlas).
+              </li>
+            </ul>
+          </div>
+        </div>
+             </section>
+            <hr>
+
+          <!-- cors -->
+
+          <section id="cors" class="container py-5">
+      <h1 class="text-center mb-4">
+        CORS (Cross-Origin Resource Sharing) - Interview Notes
+      </h1>
+
+      <div class="card bg-dark my-2 text-white">
+        <div class="card-body ">
+          <h2 >1. What is CORS?</h2>
+          <p>
+            <strong>CORS (Cross-Origin Resource Sharing)</strong> is a browser
+            security mechanism that controls whether a web page from one origin
+            can access resources from another origin.
+          </p>
+          <p><strong>Origin = Protocol + Domain + Port</strong></p>
+          <pre><code>http://localhost:3000
+http://localhost:5000
+Different origin because port is different.</code></pre>
+          <p>
+            <strong>Interview:</strong> CORS allows or blocks cross-origin
+            requests based on server response headers.
+          </p>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>2. Why CORS?</h2>
+          <p>
+            Without CORS, any website could try to read sensitive data from
+            another website. Browsers block such requests by default.
+          </p>
+          <pre><code>evilwebsite.com ----X----> bank.com/api/account</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>3. Layman Example</h2>
+          <p>
+            Imagine a gated apartment. The security guard checks whether your
+            name is on the visitor list.
+          </p>
+          <ul>
+            <li>Security Guard = Browser CORS</li>
+            <li>Visitor List = Allowed Origins</li>
+            <li>Apartment = Backend API</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>4. How CORS Works Internally</h2>
+          <pre><code>Frontend
+   |
+GET /users
+   |
+Browser adds:
+Origin: http://localhost:3000
+   |
+Backend checks allowed origin
+   |
+Returns:
+Access-Control-Allow-Origin: http://localhost:3000
+   |
+Browser compares Origin with header
+Match -> Allow
+No Match -> Block</code></pre>
+          <p>The browser enforces CORS. The backend only sends CORS headers.</p>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>5. Preflight (OPTIONS)</h2>
+          <p>
+            For PUT, PATCH, DELETE or custom headers, the browser first sends an
+            OPTIONS request.
+          </p>
+          <pre><code>OPTIONS /users
+
+Access-Control-Allow-Origin
+Access-Control-Allow-Methods
+Access-Control-Allow-Headers</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>6. Install</h2>
+          <pre><code>npm install cors</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>7. Allow All Origins</h2>
+          <pre><code>const express = require("express");
+const cors = require("cors");
+const app = express();
+
+app.use(cors());</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>8. Allow Single Origin</h2>
+          <pre><code>app.use(cors({
+  origin: "http://localhost:3000"
+}));</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>9. Allow Multiple Origins</h2>
+          <pre><code>const allowedOrigins = [
+ "http://localhost:3000",
+ "http://localhost:5173",
+ "https://mywebsite.com"
+];
+
+app.use(cors({
+ origin: allowedOrigins
+}));</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>10. Dynamic Origin Validation</h2>
+          <pre><code>const allowedOrigins = [
+ "http://localhost:3000",
+ "https://mywebsite.com"
+];
+
+app.use(cors({
+ origin: function(origin, callback){
+   if(!origin) return callback(null,true);
+
+   if(allowedOrigins.includes(origin)){
+      callback(null,true);
+   }else{
+      callback(new Error("Not allowed by CORS"));
+   }
+ }
+}));</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>11. Credentials</h2>
+          <pre><code>app.use(cors({
+ origin:"http://localhost:3000",
+ credentials:true
+}));
+
+fetch("http://localhost:5000/users",{
+ credentials:"include"
+});</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>12. Methods</h2>
+          <pre><code>app.use(cors({
+ origin:"http://localhost:3000",
+ methods:["GET","POST","PUT","DELETE"]
+}));</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>13. Allowed Headers</h2>
+          <pre><code>app.use(cors({
+ origin:"http://localhost:3000",
+ allowedHeaders:["Content-Type","Authorization"]
+}));</code></pre>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>14. Alternatives to CORS</h2>
+          <ul>
+            <li>Proxy Server (React/Vite/Nginx)</li>
+            <li>Backend for Frontend (BFF)</li>
+            <li>Serve frontend and backend from the same origin</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card  bg-dark my-2 text-white">
+        <div class="card-body">
+          <h2>15. Common Interview Questions</h2>
+          <ol>
+            <li>What is CORS? → Browser security mechanism.</li>
+            <li>Who enforces CORS? → Browser.</li>
+            <li>What is Origin? → Protocol + Domain + Port.</li>
+            <li>What is Preflight? → OPTIONS request.</li>
+            <li>Does Postman follow CORS? → No.</li>
+            <li>Can origin="*" be used with credentials=true? → No.</li>
+          </ol>
+        </div>
+      </div>
+         </section>
+         <hr>
+
         </main>
       </div>
     </div>
