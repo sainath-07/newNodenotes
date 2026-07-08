@@ -330,6 +330,26 @@
                 >CORS
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#multer"
+                >Multer
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#dotenv"
+                >DotEnv
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#gmailIntegration"
+                >Gmail Integration
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#jwt-express-crud"
+                >JWT Express Crud
+              </a>
+            </li>
           </ol>
         </nav>
 
@@ -25804,6 +25824,3570 @@ fetch("http://localhost:5000/users",{
       </div>
          </section>
          <hr>
+
+
+         <!-- Multer -->
+
+         <section id="multer" class="container my-5">
+
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">📁 Express.js Multer - File Upload (Interview Notes)</h2>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Introduction -->
+      <div class="alert alert-info">
+        <h4>What is Multer?</h4>
+        <p class="mb-0">
+          <strong>Multer</strong> is an Express.js middleware used to upload files
+          such as images, PDFs, videos, documents, etc. It processes
+          <code>multipart/form-data</code>, which is required for file uploads.
+        </p>
+      </div>
+
+      <hr>
+
+      <!-- Why Multer -->
+      <h3 class="text-primary">Why do we use Multer?</h3>
+
+      <ul class="list-group mb-4">
+        <li class="list-group-item">✔ Upload images, videos, PDFs and documents.</li>
+        <li class="list-group-item">✔ Save files on local storage or cloud storage.</li>
+        <li class="list-group-item">✔ Automatically parses multipart/form-data.</li>
+        <li class="list-group-item">✔ Easy integration with Express.js.</li>
+        <li class="list-group-item">✔ Supports single and multiple file uploads.</li>
+      </ul>
+
+      <hr>
+
+      <!-- Installation -->
+      <h3 class="text-success">Installation</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+npm install multer
+</pre>
+
+      <hr>
+
+      <!-- Flow -->
+      <h3 class="text-primary">Multer Upload Flow</h3>
+
+      <div class="card bg-light mb-4">
+        <div class="card-body">
+
+          <ol>
+            <li>User selects a file from the browser.</li>
+            <li>Browser sends the file using <code>multipart/form-data</code>.</li>
+            <li>Multer receives the file.</li>
+            <li>Multer stores the file in the uploads folder.</li>
+            <li>Express receives file information through <code>req.file</code>.</li>
+            <li>Response is sent back to the client.</li>
+          </ol>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Code Explanation -->
+
+      <h2 class="text-danger">Step 1 - Import Required Modules</h2>
+
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Module</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>express</td>
+            <td>Create Express server.</td>
+          </tr>
+
+          <tr>
+            <td>path</td>
+            <td>Extract file extension.</td>
+          </tr>
+
+          <tr>
+            <td>multer</td>
+            <td>Upload files.</td>
+          </tr>
+
+          <tr>
+            <td>fs</td>
+            <td>Create uploads folder if it doesn't exist.</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+<pre class="bg-dark text-white p-3 rounded">
+import express from "express";
+import path from "path";
+import multer from "multer";
+import fs from "fs";
+
+const app = express();
+</pre>
+
+<div class="alert alert-warning">
+<strong>Interview Answer:</strong><br>
+These modules are required to create an Express server, upload files,
+work with file paths and interact with the file system.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 2 - Configure Storage</h2>
+
+<p>
+Multer needs to know:
+</p>
+
+<ul>
+<li>Where to store uploaded files.</li>
+<li>What filename should be assigned.</li>
+</ul>
+
+<pre class="bg-dark text-white p-3 rounded">
+const storage = multer.diskStorage({
+
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+
+  filename: function (req, file, cb) {
+    const uniqueFileName =
+      Date.now() + path.extname(file.originalname);
+
+    cb(null, uniqueFileName);
+  }
+
+});
+</pre>
+
+<div class="card bg-light mb-4">
+<div class="card-body">
+
+<h5>destination()</h5>
+
+<p>
+Specifies the folder where uploaded files should be stored.
+</p>
+
+<h5>filename()</h5>
+
+<p>
+Creates a unique filename using current timestamp and keeps the original
+extension.
+</p>
+
+</div>
+</div>
+
+<div class="alert alert-success">
+<strong>Interview Answer:</strong><br>
+<code>diskStorage()</code> allows us to customize the upload folder and filename.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 3 - Create Upload Middleware</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+const upload = multer({
+    storage
+});
+</pre>
+
+<p>
+This middleware tells Multer to use the above storage configuration.
+</p>
+
+<div class="alert alert-warning">
+<strong>Interview Answer:</strong><br>
+The upload middleware processes incoming files before the request reaches
+the route handler.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 4 - Create Upload Folder</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+}
+</pre>
+
+<p>
+Checks whether the uploads folder exists.
+If not, it creates one automatically.
+</p>
+
+<div class="alert alert-success">
+<strong>Interview Answer:</strong><br>
+This prevents errors when uploading files for the first time.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 5 - Create Home Route</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.get("/", (req, res) => {
+
+  res.send(`
+    &lt;form
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"&gt;
+
+      &lt;input type="file" name="myfile"&gt;
+
+      &lt;button&gt;Upload&lt;/button&gt;
+
+    &lt;/form&gt;
+  `);
+
+});
+</pre>
+
+<h5>Why enctype="multipart/form-data"?</h5>
+
+<p>
+Without this attribute the browser cannot send files.
+</p>
+
+<div class="alert alert-info">
+<strong>Interview Answer:</strong><br>
+<code>multipart/form-data</code> is required whenever a form uploads files.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 6 - Upload Route</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.post(
+    "/upload",
+    upload.single("myfile"),
+    (req, res) => {
+
+        res.send(
+            `File uploaded successfully:
+             ${req.file.filename}`
+        );
+
+});
+</pre>
+
+<h5>upload.single("myfile")</h5>
+
+<p>
+Accepts only one uploaded file.
+</p>
+
+<h5>req.file</h5>
+
+<p>
+Contains uploaded file information.
+</p>
+
+<table class="table table-bordered">
+
+<thead class="table-secondary">
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>filename</td>
+<td>Stored filename</td>
+</tr>
+
+<tr>
+<td>originalname</td>
+<td>Original filename</td>
+</tr>
+
+<tr>
+<td>size</td>
+<td>File size</td>
+</tr>
+
+<tr>
+<td>mimetype</td>
+<td>File type</td>
+</tr>
+
+<tr>
+<td>destination</td>
+<td>Upload folder</td>
+</tr>
+
+<tr>
+<td>path</td>
+<td>Full file path</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="alert alert-success">
+<strong>Interview Answer:</strong><br>
+<code>upload.single()</code> uploads one file and stores file information inside
+<code>req.file</code>.
+</div>
+
+<hr>
+
+<h2 class="text-danger">Step 7 - Start Server</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+});
+</pre>
+
+<div class="alert alert-warning">
+<strong>Interview Answer:</strong><br>
+Starts the Express server on port 3000.
+</div>
+
+<hr>
+
+<h2 class="text-primary">Complete Example</h2>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import express from "express";
+import path from "path";
+import multer from "multer";
+import fs from "fs";
+
+const app = express();
+
+// Step-1: Store configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+
+  filename: function (req, file, cb) {
+    const uniqueFileName =
+      Date.now() + path.extname(file.originalname);
+
+    cb(null, uniqueFileName);
+  },
+});
+
+// Step-2: Upload middleware
+const upload = multer({ storage });
+
+// Step-3: Create uploads folder
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+// Step-4: Routes
+app.get("/", (req, res) => {
+  res.send(`
+    &lt;h2&gt;File Upload&lt;/h2&gt;
+
+    &lt;form
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"&gt;
+
+      &lt;input type="file" name="myfile"&gt;
+      &lt;button&gt;Upload&lt;/button&gt;
+
+    &lt;/form&gt;
+  `);
+});
+
+app.post(
+  "/upload",
+  upload.single("myfile"),
+  (req, res) => {
+
+    res.send(
+      `File uploaded successfully:
+      ${req.file.filename}`
+    );
+
+});
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
+});
+</pre>
+
+<hr>
+
+<h2 class="text-success">Multer Methods</h2>
+
+<table class="table table-bordered">
+
+<thead class="table-dark">
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>upload.single("field")</td>
+<td>Upload one file.</td>
+</tr>
+
+<tr>
+<td>upload.array("field",5)</td>
+<td>Upload multiple files.</td>
+</tr>
+
+<tr>
+<td>upload.fields()</td>
+<td>Upload multiple fields with different names.</td>
+</tr>
+
+<tr>
+<td>upload.none()</td>
+<td>No file upload, only text fields.</td>
+</tr>
+
+<tr>
+<td>upload.any()</td>
+<td>Accept any uploaded files.</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<hr>
+
+<h2 class="text-success">Common Interview Questions</h2>
+
+<div class="accordion" id="faq">
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#q1">
+1. What is Multer?
+</button>
+</h2>
+
+<div id="q1" class="accordion-collapse collapse show">
+<div class="accordion-body">
+Multer is an Express middleware used for uploading files.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">
+2. Why do we use diskStorage()?
+</button>
+</h2>
+
+<div id="q2" class="accordion-collapse collapse">
+<div class="accordion-body">
+To customize the upload folder and filename.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">
+3. Why use path.extname()?
+</button>
+</h2>
+
+<div id="q3" class="accordion-collapse collapse">
+<div class="accordion-body">
+To preserve the original file extension (.jpg, .png, .pdf).
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">
+4. What is req.file?
+</button>
+</h2>
+
+<div id="q4" class="accordion-collapse collapse">
+<div class="accordion-body">
+It contains uploaded file information like filename, size, mimetype and path.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">
+5. Why is multipart/form-data required?
+</button>
+</h2>
+
+<div id="q5" class="accordion-collapse collapse">
+<div class="accordion-body">
+Because browsers use this encoding to send files to the server.
+</div>
+</div>
+</div>
+
+</div>
+
+<hr>
+
+<div class="alert alert-primary">
+<h4>Quick Interview Revision</h4>
+
+<ul class="mb-0">
+
+<li>Multer is used for uploading files in Express.js.</li>
+
+<li><code>diskStorage()</code> customizes upload location and filename.</li>
+
+<li><code>destination()</code> specifies the upload folder.</li>
+
+<li><code>filename()</code> creates a custom filename.</li>
+
+<li><code>upload.single()</code> uploads one file.</li>
+
+<li><code>upload.array()</code> uploads multiple files.</li>
+
+<li><code>req.file</code> stores uploaded file details.</li>
+
+<li><code>multipart/form-data</code> is mandatory for file uploads.</li>
+
+<li><code>fs.existsSync()</code> checks whether a folder exists.</li>
+
+<li><code>fs.mkdirSync()</code> creates a folder.</li>
+
+<li><code>path.extname()</code> returns the file extension.</li>
+
+</ul>
+
+</div>
+
+    </div>
+  </div>
+
+        </section>
+        <hr>
+
+        <!-- dotenv -->
+
+        <section id="dotenv" class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🔐 dotenv in Express.js (Complete Interview Notes)</h2>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Introduction -->
+
+            <div class="alert alert-info">
+
+                <h4>What is dotenv?</h4>
+
+                <p class="mb-0">
+                    <strong>dotenv</strong> is a Node.js package used to load environment variables
+                    from a <code>.env</code> file into <code>process.env</code>.
+                    It helps keep sensitive information like API keys, database URLs,
+                    JWT secret keys, and port numbers outside the source code.
+                </p>
+
+            </div>
+
+            <hr>
+
+            <!-- Why dotenv -->
+
+            <h3 class="text-primary">Why do we use dotenv?</h3>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ Store sensitive information securely.</li>
+
+                <li class="list-group-item">✔ Avoid hardcoding secrets in source code.</li>
+
+                <li class="list-group-item">✔ Use different configurations for Development, Testing and Production.</li>
+
+                <li class="list-group-item">✔ Improve application security.</li>
+
+                <li class="list-group-item">✔ Easy to change environment values without modifying code.</li>
+
+            </ul>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                We use <strong>dotenv</strong> to load environment variables from a
+                <code>.env</code> file so sensitive information is not hardcoded in the application.
+            </div>
+
+            <hr>
+
+            <!-- Installation -->
+
+            <h3 class="text-success">Installation</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+npm install dotenv
+</pre>
+
+            <hr>
+
+            <!-- Folder Structure -->
+
+            <h3 class="text-primary">Project Structure</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+project/
+
+│── node_modules/
+│── app.js
+│── package.json
+│── .env
+</pre>
+
+            <hr>
+
+            <!-- .env -->
+
+            <h3 class="text-primary">Example .env File</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+PORT=3000
+APP_NAME=Express Tutorial
+SECRET_KEY=mysecretkey123
+</pre>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                The <code>.env</code> file stores environment variables that can be accessed using
+                <code>process.env</code>.
+            </div>
+
+            <hr>
+
+            <!-- Step 1 -->
+
+            <h2 class="text-danger">Step 1 - Import Required Modules</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+import express from "express";
+import dotenv from "dotenv";
+
+const app = express();
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Module</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>express</td>
+                        <td>Create Express server.</td>
+                    </tr>
+
+                    <tr>
+                        <td>dotenv</td>
+                        <td>Load environment variables.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                <code>dotenv</code> is imported to load variables from the
+                <code>.env</code> file.
+            </div>
+
+            <hr>
+
+            <!-- Step 2 -->
+
+            <h2 class="text-danger">Step 2 - Load Environment Variables</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+dotenv.config();
+</pre>
+
+            <p>
+                This line reads the <code>.env</code> file and stores all variables inside
+                <code>process.env</code>.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                <code>dotenv.config()</code> loads all variables from the
+                <code>.env</code> file into <code>process.env</code>.
+            </div>
+
+            <hr>
+
+            <!-- Step 3 -->
+
+            <h2 class="text-danger">Step 3 - Read Environment Variables</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+const PORT = process.env.PORT;
+const APP_NAME = process.env.APP_NAME;
+const SECRET_KEY = process.env.SECRET_KEY;
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Variable</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>PORT</td>
+                        <td>Application running port.</td>
+                    </tr>
+
+                    <tr>
+                        <td>APP_NAME</td>
+                        <td>Application name.</td>
+                    </tr>
+
+                    <tr>
+                        <td>SECRET_KEY</td>
+                        <td>JWT or encryption secret key.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                <code>process.env</code> is an object that stores all environment variables.
+            </div>
+
+            <hr>
+
+            <!-- Step 4 -->
+
+            <h2 class="text-danger">Step 4 - Create Route</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.get("/", (req, res) => {
+
+    res.send(`
+        &lt;h1&gt;Welcome&lt;/h1&gt;
+        &lt;p&gt;Port : ${PORT}&lt;/p&gt;
+        &lt;p&gt;App Name : ${APP_NAME}&lt;/p&gt;
+        &lt;p&gt;Secret Key : ${SECRET_KEY}&lt;/p&gt;
+    `);
+
+});
+</pre>
+
+            <p>
+                This route displays the values stored inside the environment variables.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                Environment variables can be accessed anywhere using
+                <code>process.env</code>.
+            </div>
+
+            <hr>
+
+            <!-- Step 5 -->
+
+            <h2 class="text-danger">Step 5 - Start Server</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.listen(3000, () => {
+    console.log("Server is running on port:3000");
+});
+</pre>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                Starts the Express server on port 3000.
+            </div>
+
+            <hr>
+
+            <!-- Complete Example -->
+
+            <h2 class="text-primary">Complete Example</h2>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import express from "express";
+import dotenv from "dotenv";
+
+const app = express();
+
+// Load all environment variables
+dotenv.config();
+
+const PORT = process.env.PORT;
+const APP_NAME = process.env.APP_NAME;
+const SECRET_KEY = process.env.SECRET_KEY;
+
+app.get("/", (req, res) => {
+
+    res.send(`
+        &lt;h1&gt;Welcome to Home Page&lt;/h1&gt;
+        &lt;p&gt;Port : ${PORT}&lt;/p&gt;
+        &lt;p&gt;App Name : ${APP_NAME}&lt;/p&gt;
+        &lt;p&gt;Secret Key : ${SECRET_KEY}&lt;/p&gt;
+    `);
+
+});
+
+app.listen(3000, () => {
+    console.log("Server is running on port:3000");
+});
+</pre>
+
+            <hr>
+
+            <!-- Advantages -->
+
+            <h2 class="text-success">Advantages of dotenv</h2>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ Keeps passwords secure.</li>
+
+                <li class="list-group-item">✔ No need to hardcode secrets.</li>
+
+                <li class="list-group-item">✔ Easy configuration management.</li>
+
+                <li class="list-group-item">✔ Supports multiple environments.</li>
+
+                <li class="list-group-item">✔ Prevents accidental exposure on GitHub.</li>
+
+            </ul>
+
+            <hr>
+
+            <!-- Best Practices -->
+
+            <h2 class="text-success">Best Practices</h2>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">
+                    Never commit the <code>.env</code> file to GitHub.
+                </li>
+
+                <li class="list-group-item">
+                    Add <code>.env</code> to <code>.gitignore</code>.
+                </li>
+
+                <li class="list-group-item">
+                    Store passwords, API keys and secret keys in the <code>.env</code> file.
+                </li>
+
+                <li class="list-group-item">
+                    Keep different <code>.env</code> files for Development and Production if required.
+                </li>
+
+            </ul>
+
+            <hr>
+
+            <!-- Common Interview Questions -->
+
+            <h2 class="text-primary">Common Interview Questions</h2>
+
+            <div class="accordion" id="faq">
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#q1">
+                            1. What is dotenv?
+                        </button>
+                    </h2>
+
+                    <div id="q1" class="accordion-collapse collapse show">
+                        <div class="accordion-body">
+                            dotenv is a package that loads environment variables from a .env file into process.env.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">
+                            2. Why do we use dotenv?
+                        </button>
+                    </h2>
+
+                    <div id="q2" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            To securely store sensitive information like API keys, passwords and secret keys.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">
+                            3. What does dotenv.config() do?
+                        </button>
+                    </h2>
+
+                    <div id="q3" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            It loads variables from the .env file into process.env.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">
+                            4. What is process.env?
+                        </button>
+                    </h2>
+
+                    <div id="q4" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            process.env is an object that stores all environment variables.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">
+                            5. Why should we add .env to .gitignore?
+                        </button>
+                    </h2>
+
+                    <div id="q5" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            To prevent secret keys and passwords from being uploaded to GitHub.
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Quick Revision -->
+
+            <div class="alert alert-primary">
+
+                <h4>🚀 Quick Interview Revision</h4>
+
+                <ul class="mb-0">
+
+                    <li>dotenv is used to manage environment variables.</li>
+
+                    <li>Install using <code>npm install dotenv</code>.</li>
+
+                    <li>Create a <code>.env</code> file in the project root.</li>
+
+                    <li>Load variables using <code>dotenv.config()</code>.</li>
+
+                    <li>Access values using <code>process.env</code>.</li>
+
+                    <li>Never hardcode passwords or secret keys.</li>
+
+                    <li>Add <code>.env</code> to <code>.gitignore</code>.</li>
+
+                    <li>Store API keys, JWT secrets and database URLs in <code>.env</code>.</li>
+
+                    <li>Use different environment variables for Development and Production.</li>
+
+                    <li>dotenv improves security and makes configuration management easier.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        </section>
+        <hr>
+
+        <!-- Gmail integration -->
+
+        <section id="gmailIntegration" class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">📧 Nodemailer in Express.js (Complete Interview Notes)</h2>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Introduction -->
+
+            <div class="alert alert-info">
+
+                <h4>What is Nodemailer?</h4>
+
+                <p class="mb-0">
+                    <strong>Nodemailer</strong> is a Node.js package used to send emails from a server.
+                    It can send emails through Gmail, Outlook, Yahoo, SMTP servers, and many other email providers.
+                </p>
+
+            </div>
+
+            <hr>
+
+            <!-- Why Nodemailer -->
+
+            <h3 class="text-primary">Why do we use Nodemailer?</h3>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ Send Contact Us form emails.</li>
+
+                <li class="list-group-item">✔ Send OTP verification emails.</li>
+
+                <li class="list-group-item">✔ Send Password Reset links.</li>
+
+                <li class="list-group-item">✔ Send Registration Welcome emails.</li>
+
+                <li class="list-group-item">✔ Send Invoice or Order Confirmation emails.</li>
+
+                <li class="list-group-item">✔ Send Notifications automatically.</li>
+
+            </ul>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                Nodemailer is used to send emails from a Node.js application using SMTP or email services like Gmail.
+            </div>
+
+            <hr>
+
+            <!-- Installation -->
+
+            <h3 class="text-success">Installation</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+npm install nodemailer
+</pre>
+
+            <hr>
+
+            <!-- Flow -->
+
+            <h3 class="text-primary">Email Sending Flow</h3>
+
+            <div class="card bg-light mb-4">
+
+                <div class="card-body">
+
+                    <ol>
+
+                        <li>User fills the contact form.</li>
+
+                        <li>Frontend sends data to Express API.</li>
+
+                        <li>Express receives the request.</li>
+
+                        <li>Nodemailer creates a transporter.</li>
+
+                        <li>Email details are prepared.</li>
+
+                        <li>Nodemailer connects to Gmail SMTP.</li>
+
+                        <li>Email is delivered to the recipient.</li>
+
+                        <li>Success or error response is returned.</li>
+
+                    </ol>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Required Modules -->
+
+            <h2 class="text-danger">Step 1 - Import Required Modules</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+import express from "express";
+import cors from "cors";
+import nodemailer from "nodemailer";
+
+const app = express();
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Module</th>
+
+                        <th>Purpose</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>express</td>
+
+                        <td>Create Express server.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>cors</td>
+
+                        <td>Allow frontend requests.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>nodemailer</td>
+
+                        <td>Send emails from Node.js.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                Express creates the server, CORS allows cross-origin requests, and Nodemailer sends emails.
+            </div>
+
+            <hr>
+
+            <!-- Middleware -->
+
+            <h2 class="text-danger">Step 2 - Built-in Middleware</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.use(cors());
+
+app.use(express.json());
+
+app.use(express.urlencoded({
+    extended: true
+}));
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-secondary">
+
+                    <tr>
+
+                        <th>Middleware</th>
+
+                        <th>Purpose</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>cors()</td>
+
+                        <td>Allows frontend applications to call backend APIs.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>express.json()</td>
+
+                        <td>Reads JSON request body.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>express.urlencoded()</td>
+
+                        <td>Reads form data.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                Middleware processes incoming requests before they reach the route handler.
+            </div>
+
+            <hr>
+
+            <!-- Route -->
+
+            <h2 class="text-danger">Step 3 - Create Mail Route</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+app.post("/send-mail", async (req, res) => {
+
+    const { name, email, message } = req.body;
+
+});
+</pre>
+
+            <p>
+                This API receives the user's name, email and message from the frontend.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                <code>req.body</code> contains the data sent by the client.
+            </div>
+
+            <hr>
+
+            <!-- Transporter -->
+
+            <h2 class="text-danger">Step 4 - Create Transporter</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+const transporter = nodemailer.createTransport({
+
+    service: "gmail",
+
+    auth: {
+
+        user: "yourgmail@gmail.com",
+
+        pass: "gmail_app_password"
+
+    }
+
+});
+</pre>
+
+            <h5>What is Transporter?</h5>
+
+            <p>
+                A transporter is an object responsible for connecting to the email server
+                and sending emails.
+            </p>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                <code>createTransport()</code> creates a connection with an email service like Gmail.
+            </div>
+
+            <hr>
+
+            <!-- Mail Options -->
+
+            <h2 class="text-danger">Step 5 - Configure Email</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+const mailOptions = {
+
+    from: "yourgmail@gmail.com",
+
+    to: "receiver@gmail.com",
+
+    subject: `New Message from ${name}`,
+
+    html: `
+        &lt;h3&gt;New Message&lt;/h3&gt;
+
+        &lt;p&gt;Name : ${name}&lt;/p&gt;
+
+        &lt;p&gt;Email : ${email}&lt;/p&gt;
+
+        &lt;p&gt;Message : ${message}&lt;/p&gt;
+    `
+
+};
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Property</th>
+
+                        <th>Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>from</td>
+
+                        <td>Sender email.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>to</td>
+
+                        <td>Receiver email.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>subject</td>
+
+                        <td>Email subject.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>html</td>
+
+                        <td>Email content in HTML format.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                <code>mailOptions</code> contains all email information like sender, receiver, subject and message.
+            </div>
+
+            <hr>
+
+            <!-- Send Mail -->
+
+            <h2 class="text-danger">Step 6 - Send Email</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+await transporter.sendMail(mailOptions);
+
+res.status(200).json({
+
+    success: true,
+
+    message: "Email sent successfully"
+
+});
+</pre>
+
+            <p>
+                The <code>sendMail()</code> method sends the email using the transporter.
+            </p>
+
+            <div class="alert alert-success">
+                <strong>Interview Answer:</strong><br>
+                <code>sendMail()</code> sends the email asynchronously.
+            </div>
+
+            <hr>
+
+            <!-- Error Handling -->
+
+            <h2 class="text-danger">Step 7 - Error Handling</h2>
+
+<pre class="bg-dark text-white p-3 rounded">
+catch(error){
+
+    res.status(500).json({
+
+        success:false,
+
+        message:error.message
+
+    });
+
+}
+</pre>
+
+            <p>
+                If sending email fails, the server returns a 500 Internal Server Error.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Interview Answer:</strong><br>
+                Always wrap email sending inside a try-catch block to handle failures gracefully.
+            </div>
+
+            <hr>
+
+            <!-- Complete Code -->
+
+            <h2 class="text-primary">Complete Reference Code</h2>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:13px;">
+import express from "express";
+import cors from "cors";
+import nodemailer from "nodemailer";
+
+const app = express();
+
+// Built-in middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/send-mail", async (req, res) => {
+
+    try {
+
+        const { name, email, message } = req.body;
+
+        const transporter = nodemailer.createTransport({
+
+            service: "gmail",
+
+            auth: {
+
+                user: "sainathb308@gmail.com",
+
+                // Gmail App Password
+                pass: "lgey ehnk addd dasdfa"
+
+            }
+
+        });
+
+        const mailOptions = {
+
+            from: "sainathb308@gmail.com",
+
+            to: "shivarajb308@gmail.com",
+
+            subject: `New Message from ${name}`,
+
+            html: `
+                &lt;h3&gt;New message from portfolio&lt;/h3&gt;
+
+                &lt;p&gt;&lt;strong&gt;Name:&lt;/strong&gt; ${name}&lt;/p&gt;
+
+                &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; ${email}&lt;/p&gt;
+
+                &lt;p&gt;&lt;strong&gt;Message:&lt;/strong&gt; ${message}&lt;/p&gt;
+            `
+
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({
+
+            success: true,
+
+            message: "Email sent successfully"
+
+        });
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+    }
+
+});
+
+app.listen(3000, () => {
+
+    console.log("Server Running On Port:3000");
+
+});
+</pre>
+
+            <hr>
+
+            <!-- Real Time Uses -->
+
+            <h2 class="text-success">Real-Time Uses of Nodemailer</h2>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ Contact Us page</li>
+
+                <li class="list-group-item">✔ OTP Verification</li>
+
+                <li class="list-group-item">✔ Forgot Password</li>
+
+                <li class="list-group-item">✔ Welcome Email</li>
+
+                <li class="list-group-item">✔ Order Confirmation</li>
+
+                <li class="list-group-item">✔ Payment Receipt</li>
+
+                <li class="list-group-item">✔ Newsletter</li>
+
+                <li class="list-group-item">✔ Invoice Email</li>
+
+            </ul>
+
+            <hr>
+
+            <!-- Best Practices -->
+
+            <h2 class="text-success">Best Practices</h2>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ Never hardcode Gmail passwords.</li>
+
+                <li class="list-group-item">✔ Store credentials inside a <code>.env</code> file.</li>
+
+                <li class="list-group-item">✔ Use Gmail App Password instead of your Gmail login password.</li>
+
+                <li class="list-group-item">✔ Always use try-catch while sending emails.</li>
+
+                <li class="list-group-item">✔ Validate user input before sending emails.</li>
+
+            </ul>
+
+            <hr>
+
+            <!-- Interview Questions -->
+
+            <h2 class="text-primary">Common Interview Questions</h2>
+
+            <div class="accordion" id="faq">
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#q1">
+                            1. What is Nodemailer?
+                        </button>
+
+                    </h2>
+
+                    <div id="q1" class="accordion-collapse collapse show">
+
+                        <div class="accordion-body">
+                            Nodemailer is a Node.js package used to send emails from backend applications.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">
+                            2. What is createTransport()?
+                        </button>
+
+                    </h2>
+
+                    <div id="q2" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+                            It creates a transporter object that connects to the email server.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">
+                            3. What is sendMail()?
+                        </button>
+
+                    </h2>
+
+                    <div id="q3" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+                            It sends an email using the configured transporter.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">
+                            4. Why use Gmail App Password?
+                        </button>
+
+                    </h2>
+
+                    <div id="q4" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+                            Gmail blocks normal passwords for SMTP. App Passwords provide secure authentication.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">
+                            5. Where should email credentials be stored?
+                        </button>
+
+                    </h2>
+
+                    <div id="q5" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+                            Store email credentials in a <code>.env</code> file instead of hardcoding them.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Quick Revision -->
+
+            <div class="alert alert-primary">
+
+                <h4>🚀 Quick Interview Revision</h4>
+
+                <ul class="mb-0">
+
+                    <li>Nodemailer is used to send emails in Node.js.</li>
+
+                    <li>Install using <code>npm install nodemailer</code>.</li>
+
+                    <li><code>createTransport()</code> creates the email transporter.</li>
+
+                    <li><code>sendMail()</code> sends the email.</li>
+
+                    <li><code>mailOptions</code> contains sender, receiver, subject and message.</li>
+
+                    <li>Use Gmail App Password for Gmail SMTP.</li>
+
+                    <li>Store email credentials in a <code>.env</code> file.</li>
+
+                    <li>Always use try-catch for email sending.</li>
+
+                    <li>Validate request data before sending emails.</li>
+
+                    <li>Nodemailer is commonly used for OTP, Contact Us, Password Reset and Notifications.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        </section>
+        <hr>
+
+
+        <!-- jwt-express-crud -->
+         <section id="jwt-express-crud" class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🔐 JWT (JSON Web Token) - Complete Interview Notes</h2>
+        </div>
+
+        <div class="card-body">
+
+            <!-- What is JWT -->
+
+            <div class="alert alert-info">
+
+                <h3>1. What is JWT?</h3>
+
+                <p>
+                    <strong>JWT (JSON Web Token)</strong> is a secure token used to identify a user
+                    after they log in successfully.
+                </p>
+
+                <p>
+                    Instead of asking the user to log in again for every request,
+                    the server gives the user a token.
+                    The user sends that token with every future request,
+                    and the server checks whether the token is valid.
+                </p>
+
+                <div class="alert alert-success mb-0">
+                    <strong>Interview Answer:</strong><br>
+                    JWT is a secure, compact token used for authentication and authorization
+                    in web and mobile applications.
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Real Life -->
+
+            <h3 class="text-primary">Real-Life Example</h3>
+
+            <div class="card bg-light mb-4">
+
+                <div class="card-body">
+
+                    <p>
+                        Imagine you enter a movie theater.
+                    </p>
+
+                    <ul>
+
+                        <li>You first buy a ticket.</li>
+
+                        <li>The ticket proves that you have already paid.</li>
+
+                        <li>Whenever someone asks, you simply show the ticket.</li>
+
+                        <li>You don't need to buy another ticket every time.</li>
+
+                    </ul>
+
+                    <p>
+
+                        Here,
+
+                    </p>
+
+                    <table class="table table-bordered">
+
+                        <tr>
+                            <th>Real World</th>
+                            <th>JWT World</th>
+                        </tr>
+
+                        <tr>
+                            <td>Movie Ticket</td>
+                            <td>JWT Token</td>
+                        </tr>
+
+                        <tr>
+                            <td>Security Guard</td>
+                            <td>Backend Server</td>
+                        </tr>
+
+                        <tr>
+                            <td>Person</td>
+                            <td>User</td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Why JWT -->
+
+            <h3 class="text-success">2. Why do we use JWT?</h3>
+
+            <p>
+
+                Without JWT, the user would need to log in again for every request.
+
+            </p>
+
+            <div class="card bg-light">
+
+                <div class="card-body">
+
+                    <h5>Problems Without JWT</h5>
+
+                    <ul>
+
+                        <li>User logs in.</li>
+
+                        <li>User opens Profile page.</li>
+
+                        <li>Server doesn't know who the user is.</li>
+
+                        <li>User has to log in again.</li>
+
+                        <li>This creates a poor user experience.</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <h5>With JWT</h5>
+
+            <ul class="list-group mb-4">
+
+                <li class="list-group-item">✔ User logs in only once.</li>
+
+                <li class="list-group-item">✔ Server creates a JWT token.</li>
+
+                <li class="list-group-item">✔ Client stores the token.</li>
+
+                <li class="list-group-item">✔ Every request sends the token.</li>
+
+                <li class="list-group-item">✔ Server verifies the token.</li>
+
+                <li class="list-group-item">✔ User can access protected pages.</li>
+
+            </ul>
+
+            <div class="alert alert-success">
+
+                <strong>Interview Answer:</strong><br>
+
+                JWT allows users to remain authenticated without logging in for every request.
+
+            </div>
+
+            <hr>
+
+            <!-- Advantages -->
+
+            <h3 class="text-primary">Advantages of JWT</h3>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Advantage</th>
+
+                        <th>Explanation</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Stateless</td>
+
+                        <td>No session data is stored on the server.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Fast</td>
+
+                        <td>Server only verifies the token.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Scalable</td>
+
+                        <td>Works well with multiple servers.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Secure</td>
+
+                        <td>Token is digitally signed.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Cross Platform</td>
+
+                        <td>Works for Web, Mobile and APIs.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <!-- Alternatives -->
+
+            <h3 class="text-danger">3. Alternatives to JWT</h3>
+
+            <table class="table table-bordered">
+
+                <thead class="table-secondary">
+
+                    <tr>
+
+                        <th>Method</th>
+
+                        <th>Description</th>
+
+                        <th>Used For</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>JWT</td>
+
+                        <td>Stateless authentication</td>
+
+                        <td>REST APIs, React, Angular, Mobile Apps</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Session Authentication</td>
+
+                        <td>Stores user session on server</td>
+
+                        <td>Traditional websites</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>OAuth 2.0</td>
+
+                        <td>Third-party login</td>
+
+                        <td>Google Login, Facebook Login</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Passport.js</td>
+
+                        <td>Authentication middleware</td>
+
+                        <td>Supports JWT, Google, Facebook etc.</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Cookie Authentication</td>
+
+                        <td>Stores authentication inside cookies</td>
+
+                        <td>Server rendered applications</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <div class="alert alert-warning">
+
+                <strong>Interview Answer:</strong><br>
+
+                JWT is preferred for REST APIs because it is stateless, scalable and easy to use with frontend frameworks.
+
+            </div>
+
+            <hr>
+
+            <!-- JWT Works -->
+
+            <h3 class="text-primary">4. How JWT Works?</h3>
+
+            <h5>Step-by-Step Flow</h5>
+
+<pre class="bg-dark text-white p-3 rounded">
+             USER
+
+               │
+
+               ▼
+
+        Login Request
+
+(email + password)
+
+               │
+
+               ▼
+
+      Express Server
+
+      Check Database
+
+               │
+
+     Correct Password?
+
+       YES        NO
+
+        │          │
+
+        ▼          ▼
+
+ Generate JWT    Error
+
+        │
+
+        ▼
+
+Send Token to Client
+
+        │
+
+Client stores token
+
+(localStorage/Cookie)
+
+        │
+
+        ▼
+
+Future Requests
+
+Authorization: Bearer Token
+
+        │
+
+        ▼
+
+Express Server
+
+jwt.verify()
+
+        │
+
+Valid Token?
+
+YES          NO
+
+│             │
+
+▼             ▼
+
+Access      Unauthorized
+
+Granted       401
+</pre>
+
+            <hr>
+
+            <!-- Visual Example -->
+
+            <h3 class="text-success">JWT Request Flow</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+POST /login
+
+↓
+
+Server validates email/password
+
+↓
+
+jwt.sign()
+
+↓
+
+Returns Token
+
+↓
+
+Client stores Token
+
+↓
+
+GET /profile
+
+Authorization: Bearer Token
+
+↓
+
+jwt.verify()
+
+↓
+
+Returns Protected Data
+</pre>
+
+            <hr>
+
+            <!-- JWT Structure -->
+
+            <h3 class="text-primary">JWT Structure</h3>
+
+<pre class="bg-dark text-white p-3 rounded">
+HEADER
+
+.
+
+PAYLOAD
+
+.
+
+SIGNATURE
+</pre>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>Part</th>
+
+                        <th>Purpose</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Header</td>
+
+                        <td>Algorithm used for signing (HS256).</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Payload</td>
+
+                        <td>User information (id, email etc.).</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Signature</td>
+
+                        <td>Verifies that token has not been modified.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <!-- Code Questions -->
+
+            <h3 class="text-danger">5. Code-Based Interview Questions</h3>
+
+            <div class="accordion" id="faq">
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#q1">
+
+                            1. What does jwt.sign() do?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q1" class="accordion-collapse collapse show">
+
+                        <div class="accordion-body">
+
+                            It creates a JWT token using a payload and a secret key.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">
+
+                            2. What does jwt.verify() do?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q2" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+
+                            It verifies whether the token is valid and not tampered with.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">
+
+                            3. Why do we need SECRET_KEY?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q3" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+
+                            SECRET_KEY is used to sign and verify JWT tokens. Without the correct secret, a token cannot be verified.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">
+
+                            4. Where should JWT be stored?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q4" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+
+                            Commonly in HttpOnly Cookies (recommended) or localStorage/sessionStorage depending on the application.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">
+
+                            5. What happens if JWT expires?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q5" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+
+                            The server rejects the request, and the user must log in again or use a refresh token if implemented.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="accordion-item">
+
+                    <h2 class="accordion-header">
+
+                        <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q6">
+
+                            6. Why is JWT called Stateless?
+
+                        </button>
+
+                    </h2>
+
+                    <div id="q6" class="accordion-collapse collapse">
+
+                        <div class="accordion-body">
+
+                            Because the server does not store session data. The token itself contains the information needed to identify the user.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <!-- Quick Revision -->
+
+            <div class="alert alert-primary">
+
+                <h3>🚀 Quick Interview Revision</h3>
+
+                <ul class="mb-0">
+
+                    <li>JWT stands for <strong>JSON Web Token</strong>.</li>
+
+                    <li>JWT is used for Authentication and Authorization.</li>
+
+                    <li>JWT is stateless.</li>
+
+                    <li>JWT contains Header, Payload and Signature.</li>
+
+                    <li><code>jwt.sign()</code> creates a token.</li>
+
+                    <li><code>jwt.verify()</code> validates a token.</li>
+
+                    <li>JWT is sent in the <code>Authorization: Bearer Token</code> header.</li>
+
+                    <li>JWT is commonly used in React, Angular, Vue, Flutter and REST APIs.</li>
+
+                    <li>Alternatives include Sessions, OAuth, Passport.js and Cookie Authentication.</li>
+
+                    <li>Always keep the <code>SECRET_KEY</code> secure and store it in a <code>.env</code> file.</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<hr>
+
+
+<!-- jwt code -->
+
+<section class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🚀 Express.js Entry Point</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>index.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                This is the entry point of the Express application. It creates the server,
+                registers middleware, loads routes, connects to MongoDB, and starts the server.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import express from "express";
+import connectDB from "./config/db.js";
+import errorHandler from "./middleware/errorhandler.js";
+import userRoute from "./routes/user.route.js";
+
+const app = express();
+
+// Parse incoming JSON requests
+app.use(express.json());
+
+// Register global error handler
+app.use(errorHandler);
+
+// Register application routes
+app.use("/api", userRoute);
+
+// Connect database and start server
+const runServer = async () => {
+
+  await connectDB();
+
+  // Start Express server
+  app.listen(3000, () => {
+    console.log("Server running on port 3000");
+  });
+
+};
+
+// Execute application
+runServer();
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>What is <code>index.js</code>?</td>
+                        <td>Main entry point of the Express application.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>express.json()</code>?</td>
+                        <td>Parses incoming JSON request bodies.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>app.use()</code>?</td>
+                        <td>Registers middleware and routes.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why call <code>connectDB()</code> before <code>app.listen()</code>?</td>
+                        <td>Ensures the database is connected before serving requests.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use an async <code>runServer()</code> function?</td>
+                        <td>Allows waiting for the database connection before starting the server.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">🗄️ MongoDB Database Connection</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>config/db.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                This file is responsible for establishing a connection between the Express application and the MongoDB database using Mongoose.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import mongoose from "mongoose";
+
+// Create database connection function
+const connectDB = () => {
+  try {
+
+    // Connect to MongoDB
+    mongoose.connect("mongodb://localhost:27017/practice1");
+
+    // Log success message
+    console.log("Db connected successfully........");
+
+  } catch (error) {
+
+    // Log connection error
+    console.log(error.message);
+
+  }
+};
+
+// Export database connection function
+export default connectDB;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>What is <code>config/db.js</code>?</td>
+                        <td>A separate file used to connect the application to MongoDB.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use Mongoose?</td>
+                        <td>It simplifies working with MongoDB by providing schemas and models.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why create a separate <code>connectDB()</code> function?</td>
+                        <td>To keep database connection logic reusable and organized.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>try...catch</code>?</td>
+                        <td>To handle database connection errors gracefully.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why export <code>connectDB</code>?</td>
+                        <td>So it can be imported and called from <code>index.js</code>.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why call <code>connectDB()</code> before <code>app.listen()</code>?</td>
+                        <td>To ensure the database is connected before accepting client requests.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="container my-5">
+
+    <!-- Authentication Middleware -->
+
+    <div class="card shadow-lg border-0 mb-5">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🔐 JWT Authentication Middleware</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>middleware/authenticate.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                This middleware verifies the JWT token before allowing access to protected routes.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import AppError from "../utils/AppError.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
+// Read JWT secret key
+const SECRET_KEY = process.env.SECRET_KEY;
+
+// Authentication middleware
+const authenticate = async (req, res, next) => {
+
+  try {
+
+    // Read token from request header
+    const token = req.headers.authorization;
+
+    // Check whether token exists
+    if (!token) {
+      throw new AppError("Invalid token", 401);
+    }
+
+    // Verify JWT token
+    const data = await jwt.verify(token, SECRET_KEY);
+
+    // Check token validity
+    if (!data) {
+      throw new AppError("Invalid token", 401);
+    }
+
+    // Store logged-in user id
+    req.userId = data.id;
+
+    // Continue to next middleware
+    next();
+
+  } catch (error) {
+
+    // Forward error to error handler
+    next(error);
+
+  }
+
+};
+
+// Export middleware
+export default authenticate;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Why use authentication middleware?</td>
+                        <td>To protect private APIs from unauthorized users.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Where is the JWT token read from?</td>
+                        <td>From <code>req.headers.authorization</code>.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What does <code>jwt.verify()</code> do?</td>
+                        <td>Verifies whether the JWT token is valid.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why store <code>req.userId</code>?</td>
+                        <td>To access the logged-in user's ID in later middleware or routes.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why call <code>next()</code>?</td>
+                        <td>To continue request processing after successful authentication.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why call <code>next(error)</code>?</td>
+                        <td>To send the error to the centralized error handler.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Error Handler -->
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">⚠️ Global Error Handler Middleware</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>middleware/errorhandler.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                Handles all application errors from one place and returns a consistent JSON response.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+// Global error handling middleware
+const errorHandler = (err, req, res, next) => {
+
+  // Log error for debugging
+  console.error(err);
+
+  // Send error response
+  return res.status(err.statusCode || 500).json({
+
+    success: false,
+
+    message: err.message || "Internal Server Error",
+
+  });
+
+};
+
+// Export middleware
+export default errorHandler;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Why use a global error handler?</td>
+                        <td>To handle all application errors from one place.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>err.statusCode || 500</code>?</td>
+                        <td>Uses the custom status code or defaults to 500.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>err.message</code>?</td>
+                        <td>Returns the actual error message to the client.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>console.error()</code>?</td>
+                        <td>Logs errors for debugging during development.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What is the default status code?</td>
+                        <td>500 (Internal Server Error).</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why is centralized error handling recommended?</td>
+                        <td>It reduces duplicate error-handling code and improves maintainability.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">👤 User Model (Mongoose Schema)</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>model/user.model.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                Defines the structure of the <strong>User</strong> collection in MongoDB using a Mongoose schema.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import mongoose from "mongoose";
+
+// Create user schema
+const userModel = new mongoose.Schema(
+
+  {
+
+    // User name
+    name: {
+      type: String,
+      trim: true,
+    },
+
+    // User email
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+    },
+
+    // User password
+    password: {
+      type: String,
+      trim: true,
+    },
+
+  },
+
+  // Automatically add createdAt and updatedAt
+  { timestamps: true },
+
+);
+
+// Create User model
+const User = mongoose.model("User", userModel);
+
+// Export User model
+export default User;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>What is a Schema?</td>
+                        <td>A schema defines the structure and rules of documents in a MongoDB collection.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What is a Model?</td>
+                        <td>A model is used to perform CRUD operations on a MongoDB collection.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>mongoose.Schema()</code>?</td>
+                        <td>To define fields, data types and validation rules for documents.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>trim: true</code>?</td>
+                        <td>Removes leading and trailing spaces from string values.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>unique: true</code>?</td>
+                        <td>Ensures duplicate email addresses cannot be stored.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What does <code>timestamps: true</code> do?</td>
+                        <td>Automatically adds <code>createdAt</code> and <code>updatedAt</code> fields.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What does <code>mongoose.model()</code> do?</td>
+                        <td>Creates a model that interacts with the MongoDB collection.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Which collection will this model use?</td>
+                        <td>Mongoose automatically creates a <code>users</code> collection from the <code>User</code> model.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why export the model?</td>
+                        <td>So it can be imported and used in routes, controllers or services.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<section class="container my-5">
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">🛣️ User Routes</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>routes/user.route.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                This file contains all user-related API routes such as Home, Register, Login and Profile.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+import AppError from "../utils/AppError.js";
+import express from "express";
+import validate from "../utils/validate.js";
+import User from "../model/user.model.js";
+import authenticate from "../middleware/authenticate.js";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// Load environment variables
+dotenv.config();
+
+// Create Express Router
+const userRoute = express.Router();
+
+// Read JWT secret key
+const SECRET_KEY = process.env.SECRET_KEY;
+
+// Home route
+userRoute.get("/", (req, res) => {
+
+  return res.status(200).json({
+    message: "Home page",
+  });
+
+});
+
+// Register user
+userRoute.post("/add-user", async (req, res, next) => {
+
+  try {
+
+    // Read request body
+    const { email, name, password } = req.body;
+
+    // Validate request
+    validate(req.body);
+
+    // Check existing user
+    const user = await User.findOne({ email });
+
+    console.log({ user });
+
+    // Prevent duplicate email
+    if (user) {
+      throw new AppError("Email already exists", 401);
+    }
+
+    // Hash password
+    const hashPassword = await bcrypt.hash(password, 12);
+
+    // Create new user
+    await User.create({
+      email,
+      name,
+      password: hashPassword,
+    });
+
+    // Send success response
+    return res.status(200).json({
+      success: true,
+      message: "Created user successfully",
+    });
+
+  } catch (error) {
+
+    // Forward error
+    next(error);
+
+  }
+
+});
+
+// Login user
+userRoute.post("/login-user", async (req, res, next) => {
+
+  try {
+
+    // Read request body
+    const { email, password } = req.body;
+
+    // Validate request
+    validate(req.body);
+
+    // Find user
+    const user = await User.findOne({ email });
+
+    // Check user exists
+    if (!user) {
+      throw new AppError("User doesnot exists", 401);
+    }
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    // Check password
+    if (!isValidPassword) {
+      throw new AppError("Invalid password", 401);
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user._id },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    // Send login response
+    return res.status(200).json({
+      success: true,
+      token,
+      message: "Logged in successfully",
+    });
+
+  } catch (error) {
+
+    // Forward error
+    next(error);
+
+  }
+
+});
+
+// Protected profile route
+userRoute.get("/profile", authenticate, async (req, res) => {
+
+  // Get all users
+  const users = await User.find();
+
+  // Check empty data
+  if (users.length === 0) {
+
+    return res.status(200).json({
+      success: true,
+      message: "Welcome to Profile page, No user found",
+      data: users,
+    });
+
+  }
+
+  // Return users
+  return res.status(200).json({
+    success: true,
+    message: "Welcome to Profile page",
+    data: users,
+  });
+
+});
+
+// Export router
+export default userRoute;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Available APIs</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Purpose</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>GET</td>
+                        <td>/</td>
+                        <td>Home Route</td>
+                    </tr>
+
+                    <tr>
+                        <td>POST</td>
+                        <td>/add-user</td>
+                        <td>Register New User</td>
+                    </tr>
+
+                    <tr>
+                        <td>POST</td>
+                        <td>/login-user</td>
+                        <td>Login User & Generate JWT</td>
+                    </tr>
+
+                    <tr>
+                        <td>GET</td>
+                        <td>/profile</td>
+                        <td>Protected Profile Route</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Why use <code>express.Router()</code>?</td>
+                        <td>To organize related routes into separate modules.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why call <code>validate()</code>?</td>
+                        <td>To ensure required request fields are provided.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>User.findOne()</code>?</td>
+                        <td>To find a user by email in MongoDB.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why hash passwords?</td>
+                        <td>To securely store passwords in the database.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>bcrypt.compare()</code>?</td>
+                        <td>To compare the entered password with the hashed password.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>jwt.sign()</code>?</td>
+                        <td>To generate a JWT token after successful login.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>authenticate</code> middleware?</td>
+                        <td>To allow only authenticated users to access protected routes.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>next(error)</code>?</td>
+                        <td>To forward errors to the global error handler.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What is the purpose of <code>SECRET_KEY</code>?</td>
+                        <td>It is used to sign and verify JWT tokens.</td>
+                    </tr>
+
+                    <tr>
+                        <td>What status code is returned on successful login?</td>
+                        <td><code>200 OK</code>.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="container my-5">
+
+    <!-- AppError -->
+
+    <div class="card shadow-lg border-0 mb-5">
+
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">🚨 Custom Error Class</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>utils/AppError.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                Creates reusable custom errors with a message and HTTP status code.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+// Create custom error class
+class AppError extends Error {
+
+  constructor(message, statusCode) {
+
+    // Pass error message to parent class
+    super(message);
+
+    // Store HTTP status code
+    this.statusCode = statusCode;
+
+    // Set custom error name
+    this.name = "AppError";
+
+    // Capture stack trace
+    Error.captureStackTrace(this, this.constructor);
+
+  }
+
+}
+
+// Export custom error class
+export default AppError;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>What is <code>AppError</code>?</td>
+                        <td>A custom error class used to create consistent application errors.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why extend the <code>Error</code> class?</td>
+                        <td>To inherit JavaScript's built-in error functionality.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>super(message)</code>?</td>
+                        <td>To pass the error message to the parent Error class.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why store <code>statusCode</code>?</td>
+                        <td>To return the correct HTTP status code in the response.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>Error.captureStackTrace()</code>?</td>
+                        <td>To generate a cleaner stack trace for debugging.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- Validate -->
+
+    <div class="card shadow-lg border-0 mb-5">
+
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">✅ Request Validation Utility</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>utils/validate.js</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                Validates request fields and throws an error if any required field is empty.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+// Validate request fields
+const validate = (fields) => {
+
+  // Loop through all fields
+  Object.entries(fields).forEach(([key, value]) => {
+
+    // Check empty values
+    if (!value || !value.trim()) {
+
+      // Throw validation error
+      throw new Error(`${key} is required`);
+
+    }
+
+  });
+
+};
+
+// Export validation function
+export default validate;
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Why create a separate validation function?</td>
+                        <td>To reuse the same validation logic across multiple APIs.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>Object.entries()</code>?</td>
+                        <td>To iterate through all request fields as key-value pairs.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why use <code>throw new Error()</code>?</td>
+                        <td>To stop execution when validation fails.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why check <code>!value || !value.trim()</code>?</td>
+                        <td>To prevent null, undefined, empty strings and strings containing only spaces.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why export <code>validate()</code>?</td>
+                        <td>So it can be reused in different route files.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- .env -->
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0">⚙️ Environment Variables</h2>
+        </div>
+
+        <div class="card-body">
+
+            <h5 class="text-secondary mb-3">
+                File: <code>.env</code>
+            </h5>
+
+            <div class="alert alert-info">
+                <strong>Purpose:</strong>
+                Stores sensitive configuration values such as secret keys outside the source code.
+            </div>
+
+<pre class="bg-dark text-white p-3 rounded" style="font-size:14px;">
+# JWT Secret Key
+SECRET_KEY=secretkey@123
+</pre>
+
+            <hr>
+
+            <h4 class="text-primary">Quick Interview Notes</h4>
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Question</th>
+                        <th>Short Answer</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>What is a <code>.env</code> file?</td>
+                        <td>A file used to store environment variables and sensitive configuration values.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Why store <code>SECRET_KEY</code> in <code>.env</code>?</td>
+                        <td>To keep sensitive information out of the source code.</td>
+                    </tr>
+
+                    <tr>
+                        <td>How do you access environment variables?</td>
+                        <td>Using <code>process.env.VARIABLE_NAME</code>.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Which package loads the <code>.env</code> file?</td>
+                        <td><code>dotenv</code>.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Should the <code>.env</code> file be pushed to GitHub?</td>
+                        <td>No. Add it to <code>.gitignore</code> to keep secrets secure.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
 
         </main>
       </div>
